@@ -1,0 +1,39 @@
+Description
+-----------
+
+This is a small demo project to test problematic sending of HID Feature
+Reports on OSX using hidapi [1]. The problems were originally discovered
+using the PlayStation Move Motion Controller with the PS Move API [2] on
+OSX. This program is thus based mainly on PS Move API's HID-related code
+and targets the Move Motion Controller only.
+
+While sending HID Feature Reports to the Move Motion Controller via
+Bluetooth works fine on Linux, this does not work at all on OSX. The only
+working fallback seems to be sending via USB which is not always possible
+(or desired).
+
+
+Building the project
+--------------------
+
+1. Clone the repository
+
+    git clone git://github.com/nitsch/test-hid-feature.git
+    cd test-hid-feature
+    git submodule init
+    git submodule update
+
+2. Build the project
+
+    mkdir build
+    cd build
+    cmake ..
+    make
+
+
+References
+----------
+
+[1] https://github.com/signal11/hidapi
+[2] https://github.com/thp/psmoveapi/
+
