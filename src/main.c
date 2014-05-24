@@ -14,6 +14,15 @@ int main( void )
 
 	printf( "Number of connected controllers: %d\n", count );
 
+	PSMove* move = psmove_connect();
+	if( ! move )
+	{
+		printf( "Cannot connect to controller.\n" );
+		return 0;
+	}
+
+	psmove_disconnect( move );
+
 	return 0;
 }
 
