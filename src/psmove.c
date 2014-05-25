@@ -151,4 +151,26 @@ enum PSMove_Connection_Type psmove_connection_type( PSMove const* move )
 }
 
 
+int psmove_send_feature_report( PSMove const* move, unsigned char const* buf, size_t len )
+{
+	if( ! move || ! buf )
+	{
+		return -1;
+	}
+
+	return hid_send_feature_report( move->hid_handle, buf, len );
+}
+
+
+int psmove_get_feature_report( PSMove const* move, unsigned char* buf, size_t len )
+{
+	if( ! move || ! buf )
+	{
+		return -1;
+	}
+
+	return hid_get_feature_report( move->hid_handle, buf, len );
+}
+
+
 
