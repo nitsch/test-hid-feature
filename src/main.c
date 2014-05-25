@@ -37,7 +37,7 @@ void test_send_auth( PSMove const* move )
 		return;
 	}
 
-	printf( "Trying to send %d bytes ... ", sizeof( buf ) );
+	printf( "Trying to send %zu bytes ... ", sizeof( buf ) );
 
 	res = psmove_send_feature_report( move, buf, sizeof( buf ) );
 
@@ -62,7 +62,7 @@ void test_send_led( PSMove const* move, unsigned char r, unsigned char g, unsign
 		return;
 	}
 
-	printf( "Trying to send %d bytes ... ", sizeof( buf ) );
+	printf( "Trying to send %zu bytes ... ", sizeof( buf ) );
 
 	res = psmove_send_feature_report( move, buf, sizeof( buf ) );
 
@@ -88,7 +88,7 @@ void test_read_auth( PSMove const* move )
 	// set Report ID
 	buf[ 0 ] = 0xA1;
 
-	printf( "Trying to read %d bytes ... ", sizeof( buf ) );
+	printf( "Trying to read %zu bytes ... ", sizeof( buf ) );
 
 	res = psmove_get_feature_report( move, buf, sizeof( buf ) );
 
