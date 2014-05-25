@@ -25,6 +25,7 @@
 struct _PSMove
 {
 	hid_device* hid_handle;
+	char* serial_number;
 };
 
 
@@ -100,6 +101,17 @@ PSMove* psmove_connect_internal( wchar_t const* serial, char const* path )
 
 	hid_set_nonblocking( move->hid_handle, 1 );
 
+	// save the device's serial number
+	// NOTE: We need to do this since USB devices have an empty serial number
+	//       and hidapi's hid_get_serial_number_string() will not return an
+	//       empty string for these but fail instead. To later distinguish USB
+	//       and Bluetooth devices we need to keep the original serial number.
+	move->serial_number = (char*) calloc( 255, sizeof( char ) );
+	if( serial )
+	{
+		wcstombs( move->serial_number, serial, 255 );
+	}
+
 	return move;
 }
 
@@ -112,6 +124,8 @@ void psmove_disconnect( PSMove* move )
 	}
 
 	hid_close( move->hid_handle );
+
+	free( move->serial_number );
 	free( move );
 }
 
@@ -123,20 +137,17 @@ enum PSMove_Connection_Type psmove_connection_type( PSMove const* move )
 		return Conn_Unknown;
 	}
 
-	enum PSMove_Connection_Type type = Conn_Unknown;
-	int res;
-	wchar_t* serial = calloc( 255, sizeof( wchar_t ) );
-
-	res = hid_get_serial_number_string( move->hid_handle, serial, 255 );
-	if( res == 0 )
+	if( move->serial_number == NULL )
 	{
-		type = ( wcslen( serial ) == 0 )
-				? Conn_USB
-				: Conn_Bluetooth;
+		return Conn_Unknown;
 	}
 
-	free( serial );
-	return type;
+	if( strlen( move->serial_number ) == 0 )
+	{
+		return Conn_USB;
+	}
+
+	return Conn_Bluetooth;
 }
 
 
