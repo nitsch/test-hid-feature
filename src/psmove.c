@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <wchar.h>
 
 
@@ -112,6 +113,30 @@ void psmove_disconnect( PSMove* move )
 
 	hid_close( move->hid_handle );
 	free( move );
+}
+
+
+enum PSMove_Connection_Type psmove_connection_type( PSMove const* move )
+{
+	if( ! move )
+	{
+		return Conn_Unknown;
+	}
+
+	enum PSMove_Connection_Type type = Conn_Unknown;
+	int res;
+	wchar_t* serial = calloc( 255, sizeof( wchar_t ) );
+
+	res = hid_get_serial_number_string( move->hid_handle, serial, 255 );
+	if( res == 0 )
+	{
+		type = ( wcslen( serial ) == 0 )
+				? Conn_USB
+				: Conn_Bluetooth;
+	}
+
+	free( serial );
+	return type;
 }
 
 
